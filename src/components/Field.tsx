@@ -17,10 +17,16 @@ interface FieldProps {
 }
 
 /** An Item which represents an list item of the repeater app */
+// interface Item {
+//     id: string;
+//     key: string;
+//     value: string;
+// }
 interface Item {
     id: string;
-    key: string;
-    value: string;
+    category: string;
+    question: string;
+    answer: string;
 }
 
 /** A simple utility function to create a 'blank' item
@@ -29,8 +35,9 @@ interface Item {
 function createItem(): Item {
     return {
         id: uuid(),
-        key: '',
-        value: '',
+        category: '',
+        question: '',
+        answer: '',
     };
 }
 
@@ -40,7 +47,7 @@ function createItem(): Item {
  * The Field expects and uses a `Contentful JSON field`
  */
 const Field = (props: FieldProps) => {
-    const { valueName = 'Value' } = props.sdk.parameters.instance as any;
+    const { value = 'Value' } = props.sdk.parameters.instance as any;
     const [items, setItems] = useState<Item[]>([]);
 
     useEffect(() => {
@@ -63,7 +70,7 @@ const Field = (props: FieldProps) => {
     /** Creates an `onChange` handler for an item based on its `property`
      * @returns A function which takes an `onChange` event 
     */
-    const createOnChangeHandler = (item: Item, property: 'key' | 'value') => (
+    const createOnChangeHandler = (item: Item, property: 'category' | 'question' | 'answer') => (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
         const itemList = items.concat();
@@ -87,23 +94,31 @@ const Field = (props: FieldProps) => {
                         <TableRow key={item.id}>
                             <TableCell>
                                 <TextField
-                                    id="key"
-                                    name="key"
-                                    labelText="Item Name"
-                                    value={item.key}
-                                    onChange={createOnChangeHandler(item, 'key')}
+                                    id="question"
+                                    name="question"
+                                    labelText="Item Question"
+                                    value={item.question}
+                                    onChange={createOnChangeHandler(item, 'question')}
                                 />
-                            </TableCell>
-                            <TableCell>
+                                <br />
                                 <TextField
-                                    id="value"
-                                    name="value"
-                                    labelText={valueName}
-                                    value={item.value}
-                                    onChange={createOnChangeHandler(item, 'value')}
+                                    id="answer"
+                                    name="answer"
+                                    labelText={'Answer'}
+                                    value={item.answer}
+                                    onChange={createOnChangeHandler(item, 'answer')}
                                 />
                             </TableCell>
-                            <TableCell align="right">
+                            <TableCell align="right" width={'20%'}>
+                                <TextField
+                                    id="category"
+                                    name="category"
+                                    labelText="Item Category"
+                                    value={item.category}
+                                    onChange={createOnChangeHandler(item, 'category')}
+                                    width='30px'
+                                />
+                                <br />
                                 <EditorToolbarButton
                                     label="delete"
                                     icon="Delete"
